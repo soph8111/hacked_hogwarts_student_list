@@ -1,0 +1,25 @@
+body {
+  background-color: #e8bc3a;
+}
+
+#heading {
+  display: grid;
+}
+
+#logo {
+  margin: auto;
+  width: 35vw;
+}
+
+h1 {
+  margin: auto;
+  font-family: "Kaisei HarunoUmi", serif;
+  font-size: 1.3rem;
+  padding: 10px;
+}
+
+#change_list {
+  max-width: 100vw;
+  display: grid;
+  gap: 8px;
+}
