@@ -24,7 +24,35 @@ let nickName;
 let house;
 let image;
 
-window.addEventListener("DOMContentLoaded", getJSON);
+// Knapper
+const filterButtons = document.querySelectorAll(`[data-action="filter"]`);
+
+/* // Animation på overskrift
+let typewriter = document.querySelector(".heading").textContent; // Henter tekst der skal udskrives
+let numberOfLetters; // Variabel der skal tælles på */
+
+window.addEventListener("DOMContentLoaded", start);
+
+function start() {
+  getJSON();
+  registerFilterButtons();
+
+  //animationHeading();
+}
+
+/* function animationHeading() {
+  numberOfLetters = typewriter.length; // Loopet skal køre det antal gange, som teksten indholder karakterer.
+  typewriter = typewriter.split("");
+  console.log(typewriter);
+  for (let i = 0; i < numberOfLetters; i++) {
+    setTimeout(addClasse(typewriter[i]), 2000);
+  }
+}
+
+function addClasse(letter) {
+  console.log(letter);
+  letter.className + "headingg";
+} */
 
 function getJSON() {
   console.log("getJSON");
@@ -53,7 +81,7 @@ function prepareObjects(jsonData) {
 
   // Retter efterfølgende bogstaverne til.
   changeLetters();
-  showStudens(allStudents);
+  showStudents(allStudents);
 }
 
 console.log(allStudents);
@@ -140,19 +168,82 @@ function changeLetters() {
   });
 }
 
-function showStudens(students) {
+function showStudents(students) {
   // funktion "showStudents" med data fra databasen som array
-  console.log("showStudens"); // Tjekker om funktionen bliver vist
+  console.log("showStudents"); // Tjekker om funktionen bliver vist
   const allStudentTemplate = document.querySelector(".student"); // Opretter en variable til templaten
 
   students.forEach((student) => {
     // Looper igennem arrayet
     const klon = allStudentTemplate.cloneNode(true).content; // Gør det muligt at klone ned i template
 
-    klon.querySelector(".student_article .student_photo").src = `${student.image}`; // billede hentes
-    klon.querySelector(".student_article .student_name").textContent = `${student.firstName} ${student.lastName}`; // navn hentes MANGLER MELLEMNAVN
-    klon.querySelector(".student_article .house").textContent = `${student.house}`; // hus hentes
+    klon.querySelector(".studentcard .student_photo").src = `${student.image}`; // billede hentes
+    klon.querySelector(".studentcard .student_name").textContent = `${student.firstName} ${student.lastName}`; // navn hentes MANGLER MELLEMNAVN
+    klon.querySelector(".studentcard .house").textContent = `${student.house}`; // hus hentes
 
     studentSection.appendChild(klon); // Kloner ned i sektionen
   });
+}
+
+// FILTERBUTTONS
+
+function registerFilterButtons() {
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", selectFilter);
+  });
+}
+
+function selectFilter(event) {
+  console.log("selectFilter");
+  const selctedFilter = event.target.dataset.filter;
+  console.log(selctedFilter);
+  filterList(selctedFilter);
+}
+
+function filterList(filterBy) {
+  let filteredList = allStudents;
+
+  if (filterBy === "slytherin") {
+    filteredList = allStudents.filter(isSlytherin);
+  } else if (filterBy === "hufflepuff") {
+    filteredList = allStudents.filter(isHufflepuff);
+  } else if (filterBy === "gufflepuff") {
+    filteredList = allStudents.filter(isGryffindor);
+  } else if (filterBy === "ravenclaw") {
+    filteredList = allStudents.filter(isRavenclaw);
+  } /* else if (filterBy === "expelled") {
+    filterList = allStudents.filter(isExpelled);
+  } */
+
+  displayList(filteredList);
+}
+
+function isSlytherin(student) {
+  console.log(student);
+  return student.house === "Slytherin";
+}
+
+function isHufflepuff(student) {
+  return student.house === "Hufflepuff";
+}
+
+function isGryffindor(student) {
+  return student.house === "Gufflepuff";
+}
+
+function isRavenclaw(student) {
+  return student.house === "Ravenclaw";
+}
+
+/* function isExpelled(student) {
+  return student.house === "Expelled";
+} */
+
+function displayList(student) {
+  console.log(student);
+  // clear the list
+  document.querySelector("#student_list").innerHTML = "";
+
+  // build a new list
+  student.forEach(showStudents(student));
 }
