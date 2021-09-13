@@ -15,6 +15,7 @@ const Student = {
 
 //
 const studentSection = document.querySelector("#student_list");
+const popupSection = document.querySelector("#popup");
 
 // Opretter variablerne så de er globale og kan kaldes fra flere funktioner
 let firstName;
@@ -35,6 +36,7 @@ window.addEventListener("DOMContentLoaded", start);
 
 function start() {
   getJSON();
+  hackedButton();
   registerFilterButtons();
 
   //animationHeading();
@@ -118,7 +120,7 @@ function getMiddelName(fullname) {
     //     middelName = "undefined";
   } else {
     //  console.log("Har ikke et mellemnavn");
-    middelName = undefined;
+    middelName = "";
   }
 
   return middelName;
@@ -144,7 +146,7 @@ function getNickName(fullname) {
   if (fullname.indexOf(` "`) >= 0) {
     nickName = nickName[1];
   } else {
-    nickName = undefined;
+    nickName = "";
   }
 
   return nickName;
@@ -152,7 +154,17 @@ function getNickName(fullname) {
 
 function getImage(fullname) {
   // billede = (efternavn)(_)(første bogstav i fornnavn)(.png) - dog er det ikke den helt rigtige sti til alle billeder
-  image = `./images/${lastName.toLowerCase()}_${firstName.substring(0, 1).toLowerCase()}.png`;
+  if (lastName === `Patil`) {
+    image = `./images/${lastName.toLowerCase()}_${firstName.toLowerCase()}.png`;
+  } else if (firstName === `Leanne`) {
+    image = `images/hogwarts.png`;
+  } /* else if (lastName === `Finch-fletchley`) {
+    lastName = lastName.split("-");
+    console.log("test");
+    image = `./images/${lastName[1].toLowerCase()}_${firstName.substring(0, 1).toLowerCase()}.png`;
+  } */ else {
+    image = `./images/${lastName.toLowerCase()}_${firstName.substring(0, 1).toLowerCase()}.png`;
+  }
   return image;
 }
 
@@ -180,9 +192,33 @@ function showStudents(students) {
     klon.querySelector(".studentcard .student_photo").src = `${student.image}`; // billede hentes
     klon.querySelector(".studentcard .student_name").textContent = `${student.firstName} ${student.lastName}`; // navn hentes MANGLER MELLEMNAVN
     klon.querySelector(".studentcard .house").textContent = `${student.house}`; // hus hentes
+    klon.querySelector(".read_more").addEventListener("click", () => readMore(student));
 
     studentSection.appendChild(klon); // Kloner ned i sektionen
   });
+}
+
+function readMore(student) {
+  const readMoreTemplate = document.querySelector(".about"); // Opretter en variable til templaten
+  document.querySelector("#popup").innerHTML = "";
+
+  document.querySelector("#popup").classList.add("active");
+
+  const klon = readMoreTemplate.cloneNode(true).content; // Gør det muligt at klone ned i template
+
+  klon.querySelector(".about_student .student_photo").src = `${student.image}`;
+
+  klon.querySelector(".about_student .fullname").textContent = `${student.firstName} ${student.middelName} ${student.lastName}`;
+  klon.querySelector(".about_student .nickname").textContent = `${student.nickName}`;
+  klon.querySelector(".about_student .house").textContent = `${student.house}`;
+  klon.querySelector(".about_student .gender").textContent = `${student.gender}`;
+  klon.querySelector(".about_student .blood").textContent = `${student.blood}`;
+
+  klon.querySelector(".about_student .close").addEventListener("click", () => {
+    document.querySelector("#popup").classList.remove("active");
+  });
+
+  popupSection.appendChild(klon); // Kloner ned i sektionen
 }
 
 // FILTERBUTTONS
@@ -207,7 +243,7 @@ function filterList(filterBy) {
     filteredList = allStudents.filter(isSlytherin);
   } else if (filterBy === "hufflepuff") {
     filteredList = allStudents.filter(isHufflepuff);
-  } else if (filterBy === "gufflepuff") {
+  } else if (filterBy === "gryffindor") {
     filteredList = allStudents.filter(isGryffindor);
   } else if (filterBy === "ravenclaw") {
     filteredList = allStudents.filter(isRavenclaw);
@@ -219,7 +255,6 @@ function filterList(filterBy) {
 }
 
 function isSlytherin(student) {
-  console.log(student);
   return student.house === "Slytherin";
 }
 
@@ -228,7 +263,7 @@ function isHufflepuff(student) {
 }
 
 function isGryffindor(student) {
-  return student.house === "Gufflepuff";
+  return student.house === "Gryffindor";
 }
 
 function isRavenclaw(student) {
@@ -245,5 +280,15 @@ function displayList(student) {
   document.querySelector("#student_list").innerHTML = "";
 
   // build a new list
-  student.forEach(showStudents(student));
+  showStudents(student);
+}
+
+// HACKING
+
+function hackedButton() {
+  document.querySelector("#ball").addEventListener("click", hackTheSystem);
+}
+
+function hackTheSystem() {
+  console.log("hackTheSystem");
 }

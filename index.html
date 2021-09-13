@@ -12,6 +12,9 @@
     <title>Hogwarts student list</title>
 </head>
 <body>
+
+    <img src="images/ball.png" alt="ball" id="ball" class="ball">
+
     <section id="heading">
         <img src="images/hogwarts.png" alt="Hogwart Logo" id="logo">
         <h1 id="h1" class="heading">Hogwart Student List</h1>
@@ -44,6 +47,8 @@
     <section id="student_list">
     </section>
 
+    <div id="popup"></div>
+
 <footer>
     <p> © Sophie Spang, 2021</p>
 </footer>
@@ -64,16 +69,20 @@
     </template>
 
     <template class="about">
-        <article>
+        <article class="about_student">
             <button class="close">X</button>
-            <img class="student_photo" src="" alt="">
-            <p class="firstname"></p>
-            <p class="nickname"></p>
-            <p class="middlename"></p>
-            <p class="lastname"></p>
-            <p class="house"></p>
-            <p class="gender"></p>
-            <p class="blood"></p>
+            <div class="names">
+                <p class="fullname"></p>
+                <p class="nickname"></p>
+            </div>
+            <div class="studentinfo">
+                <img class="student_photo" src="" alt="">
+            <div class="details">
+                <p class="house"></p>
+                <p class="gender"></p>
+                <p class="blood"></p>
+            </div>
+            </div>
         </article>
     </template>
 
