@@ -165,11 +165,10 @@ function getImage(fullname) {
     image = `./images/${lastName.toLowerCase()}_${firstName.toLowerCase()}.png`;
   } else if (firstName === `Leanne`) {
     image = `images/hogwarts.png`;
-  } /* else if (lastName === `Finch-fletchley`) {
+  } else if (firstName === `Justin`) {
     lastName = lastName.split("-");
-    console.log("test");
     image = `./images/${lastName[1].toLowerCase()}_${firstName.substring(0, 1).toLowerCase()}.png`;
-  } */ else {
+  } else {
     image = `./images/${lastName.toLowerCase()}_${firstName.substring(0, 1).toLowerCase()}.png`;
   }
   return image;
