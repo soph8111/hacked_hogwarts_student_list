@@ -28,6 +28,13 @@ let image;
 // Knapper
 const filterButtons = document.querySelectorAll(`[data-action="filter"]`);
 
+// sorter og filtrering
+const settings = {
+  filterBy: "all",
+  sortBy: "firstName",
+  sortDir: "asc",
+};
+
 /* // Animation på overskrift
 let typewriter = document.querySelector(".heading").textContent; // Henter tekst der skal udskrives
 let numberOfLetters; // Variabel der skal tælles på */
@@ -227,31 +234,39 @@ function registerFilterButtons() {
   filterButtons.forEach((button) => {
     button.addEventListener("click", selectFilter);
   });
+  document.querySelectorAll(`[data-action="sort"]`).forEach((sortButton) => {
+    sortButton.addEventListener("click", selectSort);
+  });
 }
 
 function selectFilter(event) {
   console.log("selectFilter");
   const selctedFilter = event.target.dataset.filter;
   console.log(selctedFilter);
-  filterList(selctedFilter);
+  setFilter(selctedFilter);
 }
 
-function filterList(filterBy) {
-  let filteredList = allStudents;
+function setFilter(filter) {
+  settings.filterBy = filter;
+  buildList();
+}
 
-  if (filterBy === "slytherin") {
+function filterList(filteredList) {
+  // let filteredList = allStudents;
+
+  if (settings.filterBy === "slytherin") {
     filteredList = allStudents.filter(isSlytherin);
-  } else if (filterBy === "hufflepuff") {
+  } else if (settings.filterBy === "hufflepuff") {
     filteredList = allStudents.filter(isHufflepuff);
-  } else if (filterBy === "gryffindor") {
+  } else if (settings.filterBy === "gryffindor") {
     filteredList = allStudents.filter(isGryffindor);
-  } else if (filterBy === "ravenclaw") {
+  } else if (settings.filterBy === "ravenclaw") {
     filteredList = allStudents.filter(isRavenclaw);
-  } /* else if (filterBy === "expelled") {
+  } /* else if (settings.filterBy === "expelled") {
     filterList = allStudents.filter(isExpelled);
   } */
 
-  displayList(filteredList);
+  return filteredList;
 }
 
 function isSlytherin(student) {
@@ -273,6 +288,59 @@ function isRavenclaw(student) {
 /* function isExpelled(student) {
   return student.house === "Expelled";
 } */
+
+function selectSort(event) {
+  const selectedSort = event.target.dataset.sort;
+  const sortDir = event.target.dataset.sortDirection;
+
+  // find old sortby element
+  const oldElement = document.querySelector(`[data-sort='${settings.sortBy}']`);
+  oldElement.classList.remove("sortBy");
+
+  // indicate active sort
+  event.target.classList.add("sortBy");
+
+  // toggle the direction
+  if (sortDir === "asc") {
+    event.target.dataset.sortDirection = "desc";
+  } else {
+    event.target.dataset.sortDirection = "asc";
+  }
+  console.log(selectedSort, sortDir);
+  setSort(selectedSort, sortDir);
+}
+
+function setSort(sortBy, sortDir) {
+  settings.sortBy = sortBy;
+  settings.sortDir = sortDir;
+  buildList();
+}
+
+function sortList(sortedList) {
+  let direction = 1;
+  if (settings.sortDir === "desc") {
+    direction = -1;
+  }
+
+  sortedList = sortedList.sort(sortByProperty);
+
+  function sortByProperty(studentA, studentB) {
+    if (studentA[settings.sortBy] < studentB[settings.sortBy]) {
+      return -1 * direction;
+    } else {
+      return 1 * direction;
+    }
+  }
+
+  return sortedList;
+}
+
+function buildList() {
+  const currentList = filterList(allStudents);
+  const sortedList = sortList(currentList);
+
+  displayList(sortedList);
+}
 
 function displayList(student) {
   console.log(student);

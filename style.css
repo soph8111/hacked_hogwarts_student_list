@@ -8,6 +8,19 @@ body {
   background-color: #999589;
 }
 
+/* sorting and filtering  */
+#sort button.sortBy {
+  text-decoration: underline;
+}
+
+#sort button.sortBy[data-sort-direction="asc"]::after {
+  content: "↓";
+}
+
+#sort button.sortBy[data-sort-direction="desc"]::after {
+  content: "↑";
+}
+
 #ball {
   position: absolute;
   width: 50px;
