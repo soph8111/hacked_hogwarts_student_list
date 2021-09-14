@@ -11,6 +11,8 @@ const Student = {
   nickName: "",
   house: "",
   image: "",
+  squad: false,
+  prefects: false,
 };
 
 //
@@ -85,12 +87,13 @@ function prepareObjects(jsonData) {
     student.nickName = getNickName(elm.fullname);
     student.house = elm.house;
     student.image = getImage(elm.fullname);
+    // student.gender =
     allStudents.push(student);
   });
 
   // Retter efterfølgende bogstaverne til.
   changeLetters();
-  showStudents(allStudents);
+  buildList();
 }
 
 console.log(allStudents);
@@ -142,6 +145,7 @@ function getLastName(fullname) {
   // efternavnet skal være lig med det der kommer efter det sidste mellemrum i det fulde navn
   lastName = lastName.substring(lastName.lastIndexOf(" ") + 1);
   //  console.log(lastName);
+
   return lastName;
 }
 
@@ -179,8 +183,9 @@ function changeLetters() {
     student.firstName = student.firstName.substring(0, 1).toUpperCase() + student.firstName.substring(1).toLowerCase();
     //student.middelName = student.middelName.substring(0, 1).toUpperCase() + student.middelName.substring(1).toLowerCase(); // Cannot read property 'substring' of undefined
     student.lastName = student.lastName.substring(0, 1).toUpperCase() + student.lastName.substring(1).toLowerCase();
-    //let findHypen = student.lastName.substring(student.lastName.indexOf("-") + 1);
-    //console.log(findHypen.substring(0, 1).toUpperCase() + findHypen.substring(1).toLowerCase());
+    // let findHypen = student.lastName.substring(student.lastName.indexOf("-") + 1);
+    // findHypen.substring(0, 1).toUpperCase() + findHypen.substring(1).toLowerCase();
+    // console.log(findHypen.substring(0, 1).toUpperCase() + findHypen.substring(1).toLowerCase());
     student.house = student.house.trim();
     student.house = student.house.substring(0, 1).toUpperCase() + student.house.substring(1).toLowerCase();
   });
@@ -199,6 +204,37 @@ function showStudents(students) {
     klon.querySelector(".studentcard .student_name").textContent = `${student.firstName} ${student.lastName}`; // navn hentes MANGLER MELLEMNAVN
     klon.querySelector(".studentcard .house").textContent = `${student.house}`; // hus hentes
     klon.querySelector(".read_more").addEventListener("click", () => readMore(student));
+
+    if (student.squad === true) {
+      klon.querySelector(".squad").textContent = "⭐";
+    } else if (student.squad === false) {
+      klon.querySelector(".squad").textContent = "☆";
+    }
+
+    klon.querySelector("[data-field=squad]").addEventListener("click", clickSquad);
+
+    function clickSquad() {
+      if (student.squad === true) {
+        student.squad = false;
+      } else {
+        student.squad = true;
+      }
+      buildList();
+    }
+
+    // Prefects
+    klon.querySelector("[data-field=prefects]").dataset.prefects = student.prefects;
+
+    klon.querySelector("[data-field=prefects]").addEventListener("click", clickPrefects);
+
+    function clickPrefects() {
+      if (student.prefects === true) {
+        student.prefects = false;
+      } else {
+        student.prefects = true;
+      }
+      buildList();
+    }
 
     studentSection.appendChild(klon); // Kloner ned i sektionen
   });
@@ -252,6 +288,8 @@ function setFilter(filter) {
 
 function filterList(filteredList) {
   // let filteredList = allStudents;
+  console.log("test");
+  console.log(filteredList);
 
   if (settings.filterBy === "slytherin") {
     filteredList = allStudents.filter(isSlytherin);
@@ -261,7 +299,12 @@ function filterList(filteredList) {
     filteredList = allStudents.filter(isGryffindor);
   } else if (settings.filterBy === "ravenclaw") {
     filteredList = allStudents.filter(isRavenclaw);
-  } /* else if (settings.filterBy === "expelled") {
+  } else if (settings.filterBy === "prefects") {
+    filteredList = allStudents.filter(iPrefects);
+  } else if (settings.filterBy === "squad") {
+    filteredList = allStudents.filter(isSquad);
+  }
+  /* else if (settings.filterBy === "expelled") {
     filterList = allStudents.filter(isExpelled);
   } */
 
@@ -282,6 +325,16 @@ function isGryffindor(student) {
 
 function isRavenclaw(student) {
   return student.house === "Ravenclaw";
+}
+
+function iPrefects(student) {
+  console.log("prefects");
+  return student.prefects === true;
+}
+
+function isSquad(student) {
+  console.log("squad");
+  return student.squad === true;
 }
 
 /* function isExpelled(student) {

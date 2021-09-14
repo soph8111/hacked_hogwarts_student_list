@@ -21,6 +21,15 @@ body {
   content: "↑";
 }
 
+/* PREFECTS */
+button[data-field="prefects"]::after {
+  content: "🏆";
+}
+
+button[data-field="prefects"][data-prefects="false"]::after {
+  filter: grayscale(1);
+}
+
 #ball {
   position: absolute;
   width: 50px;

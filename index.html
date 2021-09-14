@@ -29,6 +29,8 @@
             <button class="filter" data-action="filter" data-filter="hufflepuff">Hufflepuff</button>
             <button class="filter" data-action="filter" data-filter="gryffindor">Gryffindor</button>
             <button class="filter" data-action="filter" data-filter="ravenclaw">Ravenclaw</button>
+            <button class="filter" data-action="filter" data-filter="squad">Inquisitorial Squad</button>
+            <button class="filter" data-action="filter" data-filter="prefects">Prefects</button>
             <button class="filter" data-action="filter" data-filter="expelled">Expelled students</button>
         </div>
 
@@ -62,8 +64,8 @@
             <button class="read_more">Read more</button>
             <div class="action_buttons">
                 <button class="expell">E</button>
-                <button class="prefect">P</button>
-                <button class="squad">S</button>
+                <button data-field="prefects" data-prefects="false" class="prefects"></button>
+                <button data-field="squad" class="squad">☆</button>
             </div>
         </article>
     </template>
