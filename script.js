@@ -97,6 +97,7 @@ function prepareObjects(jsonData) {
   // Retter efterfølgende bogstaverne til.
   changeLetters();
   buildList();
+  document.querySelector("#search").addEventListener("input", searchStudent);
 }
 
 console.log(allStudents);
@@ -479,6 +480,21 @@ function displayList(student) {
 
   // build a new list
   showStudents(student);
+}
+
+/* Search student */
+
+function searchStudent() {
+  //console.log(allStudents);
+  const search = document.querySelector("#site-search").value;
+
+  function filterItems(arr, query) {
+    return arr.filter((el) => el.firstName.toLowerCase().includes(query.toLowerCase())); // on fullname
+  }
+
+  const searchedStudent = filterItems(allStudents, search);
+
+  displayList(searchedStudent);
 }
 
 // HACKING
