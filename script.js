@@ -310,6 +310,7 @@ function tryToMakeAPrefects(selectedStudent) {
 }
 
 function readMore(student) {
+  console.log(student);
   const readMoreTemplate = document.querySelector(".about"); // Opretter en variable til templaten
   document.querySelector("#popup").innerHTML = "";
 
@@ -330,6 +331,21 @@ function readMore(student) {
   });
 
   popupSection.appendChild(klon); // Kloner ned i sektionen
+
+  // Theme for popup
+  if (student.house === "Slytherin") {
+    document.querySelector("#popup").style.background = "#377A43";
+    document.querySelector(".crest").src = "./images/slytherin.png";
+  } else if (student.house === "Ravenclaw") {
+    document.querySelector("#popup").style.background = "#34528A";
+    document.querySelector(".crest").src = "./images/ravenclaw.png";
+  } else if (student.house === "Gryffindor") {
+    document.querySelector("#popup").style.background = "#85302B";
+    document.querySelector(".crest").src = "./images/gryffindor.png";
+  } else {
+    document.querySelector("#popup").style.background = "#FADF5B";
+    document.querySelector(".crest").src = "./images/hufflepuff.png";
+  }
 }
 
 // FILTERBUTTONS

@@ -140,7 +140,7 @@ h1 {
 }
 /* Pop Up  */
 #popup {
-  background-color: gray;
+  background: gray;
   width: 466px;
   height: 266px;
   border-radius: 15px;
@@ -150,6 +150,13 @@ h1 {
   top: 50%;
   left: 50%;
   box-shadow: rgb(0 0 0 / 16%) 0px 3px 6px, rgb(0 0 0 / 23%) 0px 3px 6px;
+}
+
+#popup .crest {
+  width: 80px;
+  position: absolute;
+  top: 8px;
+  left: 8px;
 }
 
 #popup.active {
