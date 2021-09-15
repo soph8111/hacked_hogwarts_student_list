@@ -11,6 +11,8 @@ const Student = {
   nickName: "",
   house: "",
   image: "",
+  gender: "",
+  blood: "",
   squad: false,
   prefects: false,
 };
@@ -87,7 +89,8 @@ function prepareObjects(jsonData) {
     student.nickName = getNickName(elm.fullname);
     student.house = elm.house;
     student.image = getImage(elm.fullname);
-    // student.gender =
+    student.gender = elm.gender;
+    // student.blood = getBloodStatus(elm);
     allStudents.push(student);
   });
 
@@ -178,6 +181,10 @@ function getImage(fullname) {
   return image;
 }
 
+function getBloodStatus(student) {
+  console.log("getBloodStatus");
+}
+
 function changeLetters() {
   allStudents.forEach((student) => {
     student.firstName = student.firstName.substring(0, 1).toUpperCase() + student.firstName.substring(1).toLowerCase();
@@ -193,7 +200,6 @@ function changeLetters() {
 
 function showStudents(students) {
   // funktion "showStudents" med data fra databasen som array
-  console.log("showStudents"); // Tjekker om funktionen bliver vist
   const allStudentTemplate = document.querySelector(".student"); // Opretter en variable til templaten
 
   students.forEach((student) => {
@@ -231,13 +237,76 @@ function showStudents(students) {
       if (student.prefects === true) {
         student.prefects = false;
       } else {
-        student.prefects = true;
+        tryToMakeAPrefects(student);
       }
       buildList();
     }
 
     studentSection.appendChild(klon); // Kloner ned i sektionen
   });
+}
+
+function tryToMakeAPrefects(selectedStudent) {
+  const prefects = allStudents.filter((student) => student.prefects);
+
+  const other = prefects.filter((student) => student.house === selectedStudent.house);
+  const numberOfPrefects = other.length;
+
+  console.log(prefects);
+  console.log(numberOfPrefects);
+  console.log(other);
+
+  // if there is another of the same type
+  if (numberOfPrefects >= 2) {
+    console.log("there can only be two winners");
+    removeAorB(other[0], other[1]);
+  } else {
+    makePrefects(selectedStudent);
+  }
+
+  function removeAorB(prefectsA, prefectsB) {
+    // ask the user to ignore or remove A or B
+    document.querySelector("#remove_aorb").classList.remove("hide");
+    document.querySelector("#remove_aorb .closebutton").addEventListener("click", closeDialog);
+    document.querySelector("#remove_aorb #removea").addEventListener("click", removeA);
+    document.querySelector("#remove_aorb #removeb").addEventListener("click", removeB);
+
+    // show names on buttons
+    document.querySelector("#remove_aorb [data-field=prefectsA]").textContent = prefectsA.firstName;
+    document.querySelector("#remove_aorb [data-field=prefectsB]").textContent = prefectsB.firstName;
+
+    // if the user ignore, do nothing
+    function closeDialog() {
+      document.querySelector("#remove_aorb").classList.add("hide");
+      document.querySelector("#remove_aorb .closebutton").removeEventListener("click", closeDialog);
+      document.querySelector("#remove_aorb #removea").removeEventListener("click", removeA);
+      document.querySelector("#remove_aorb #removeb").removeEventListener("click", removeB);
+    }
+
+    // if remove A
+    function removeA() {
+      removePrefects(prefectsA);
+      makePrefects(selectedStudent);
+      buildList();
+      closeDialog();
+    }
+
+    // else remove B
+    function removeB() {
+      removePrefects(prefectsB);
+      makePrefects(selectedStudent);
+      buildList();
+      closeDialog();
+    }
+  }
+
+  function removePrefects(winnerPrefects) {
+    winnerPrefects.prefects = false;
+  }
+
+  function makePrefects(student) {
+    student.prefects = true;
+  }
 }
 
 function readMore(student) {
@@ -275,9 +344,7 @@ function registerFilterButtons() {
 }
 
 function selectFilter(event) {
-  console.log("selectFilter");
   const selctedFilter = event.target.dataset.filter;
-  console.log(selctedFilter);
   setFilter(selctedFilter);
 }
 
@@ -288,8 +355,6 @@ function setFilter(filter) {
 
 function filterList(filteredList) {
   // let filteredList = allStudents;
-  console.log("test");
-  console.log(filteredList);
 
   if (settings.filterBy === "slytherin") {
     filteredList = allStudents.filter(isSlytherin);
@@ -328,12 +393,10 @@ function isRavenclaw(student) {
 }
 
 function iPrefects(student) {
-  console.log("prefects");
   return student.prefects === true;
 }
 
 function isSquad(student) {
-  console.log("squad");
   return student.squad === true;
 }
 
@@ -395,7 +458,6 @@ function buildList() {
 }
 
 function displayList(student) {
-  console.log(student);
   // clear the list
   document.querySelector("#student_list").innerHTML = "";
 
