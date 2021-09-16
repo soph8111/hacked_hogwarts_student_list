@@ -2,6 +2,7 @@
 
 // Opretter array til hvor alle studerende skal ned i, efter de er blevet rettet til
 const allStudents = [];
+let filteredStudents = allStudents;
 
 // Laver en skabelon til hvad hver studerende skal indholde
 const Student = {
@@ -15,6 +16,7 @@ const Student = {
   blood: "",
   squad: false,
   prefects: false,
+  expelled: false,
 };
 
 //
@@ -148,6 +150,9 @@ function getLastName(fullname) {
   lastName = fullname.trim();
   // efternavnet skal være lig med det der kommer efter det sidste mellemrum i det fulde navn
   lastName = lastName.substring(lastName.lastIndexOf(" ") + 1);
+  if (lastName === firstName) {
+    lastName = "";
+  }
   //  console.log(lastName);
 
   return lastName;
@@ -196,6 +201,7 @@ function changeLetters() {
     // console.log(findHypen.substring(0, 1).toUpperCase() + findHypen.substring(1).toLowerCase());
     student.house = student.house.trim();
     student.house = student.house.substring(0, 1).toUpperCase() + student.house.substring(1).toLowerCase();
+    student.gender = student.gender.substring(0, 1).toUpperCase() + student.gender.substring(1).toLowerCase();
   });
 }
 
@@ -212,6 +218,24 @@ function showStudents(students) {
     klon.querySelector(".studentcard .house").textContent = `${student.house}`; // hus hentes
     klon.querySelector(".read_more").addEventListener("click", () => readMore(student));
 
+    // Expelled
+    klon.querySelector("[data-field=expelled]").addEventListener("click", clickExpelled);
+
+    function clickExpelled() {
+      console.log("clickExpelled");
+      if (student.expelled === true) {
+        student.expelled = false;
+        console.log("den studerende bliver IKKE expelled");
+        //notExpelled();
+      } else if (student.expelled === false) {
+        student.expelled = true;
+        console.log("den studerende bliver expelled");
+        //expellStudent();
+      }
+      buildList();
+    }
+
+    // Squad
     if (student.squad === true) {
       klon.querySelector(".squad").textContent = "⭐";
     } else if (student.squad === false) {
@@ -221,7 +245,7 @@ function showStudents(students) {
     klon.querySelector("[data-field=squad]").addEventListener("click", clickSquad);
 
     function clickSquad() {
-      if (student.squad === true) {
+      if (student.squad) {
         student.squad = false;
       } else {
         student.squad = true;
@@ -235,7 +259,7 @@ function showStudents(students) {
     klon.querySelector("[data-field=prefects]").addEventListener("click", clickPrefects);
 
     function clickPrefects() {
-      if (student.prefects === true) {
+      if (student.prefects) {
         student.prefects = false;
       } else {
         tryToMakeAPrefects(student);
@@ -246,9 +270,14 @@ function showStudents(students) {
     studentSection.appendChild(klon); // Kloner ned i sektionen
   });
 }
+/* function notExpelled() {}
+
+function expellStudent() {
+  allStudents = allStudents.filter((student) => student.expelled === false);
+} */
 
 function tryToMakeAPrefects(selectedStudent) {
-  const prefects = allStudents.filter((student) => student.prefects);
+  const prefects = filteredStudents.filter((student) => student.prefects);
 
   const other = prefects.filter((student) => student.house === selectedStudent.house);
   const numberOfPrefects = other.length;
@@ -322,14 +351,30 @@ function readMore(student) {
   klon.querySelector(".about_student .student_photo").src = `${student.image}`;
 
   klon.querySelector(".about_student .fullname").textContent = `${student.firstName} ${student.middelName} ${student.lastName}`;
-  klon.querySelector(".about_student .nickname").textContent = `${student.nickName}`;
-  klon.querySelector(".about_student .house").textContent = `${student.house}`;
-  klon.querySelector(".about_student .gender").textContent = `${student.gender}`;
+  if (student.nickName === "") {
+    klon.querySelector(".about_student .nickname").textContent = "";
+  } else {
+    klon.querySelector(".about_student .nickname").textContent = `Also know as: ${student.nickName}`;
+  }
+  klon.querySelector(".about_student .house").textContent = `House: ${student.house}`;
+  klon.querySelector(".about_student .gender").textContent = `Gender: ${student.gender}`;
   klon.querySelector(".about_student .blood").textContent = `${student.blood}`;
 
   klon.querySelector(".about_student .close").addEventListener("click", () => {
     document.querySelector("#popup").classList.remove("active");
   });
+
+  if (student.prefects) {
+    klon.querySelector(".prefects_or_not").textContent = `${student.firstName} is prefects`;
+  } else {
+    klon.querySelector(".prefects_or_not").textContent = `${student.firstName} is not prefects`;
+  }
+
+  if (student.squad) {
+    klon.querySelector(".squad_or_not").textContent = `${student.firstName} is a member of inquisitorial squad`;
+  } else {
+    klon.querySelector(".squad_or_not").textContent = `${student.firstName} is not member of inquisitorial squad`;
+  }
 
   popupSection.appendChild(klon); // Kloner ned i sektionen
 
@@ -374,21 +419,20 @@ function filterList(filteredList) {
   // let filteredList = allStudents;
 
   if (settings.filterBy === "slytherin") {
-    filteredList = allStudents.filter(isSlytherin);
+    filteredList = filteredStudents.filter(isSlytherin);
   } else if (settings.filterBy === "hufflepuff") {
-    filteredList = allStudents.filter(isHufflepuff);
+    filteredList = filteredStudents.filter(isHufflepuff);
   } else if (settings.filterBy === "gryffindor") {
-    filteredList = allStudents.filter(isGryffindor);
+    filteredList = filteredStudents.filter(isGryffindor);
   } else if (settings.filterBy === "ravenclaw") {
-    filteredList = allStudents.filter(isRavenclaw);
+    filteredList = filteredStudents.filter(isRavenclaw);
   } else if (settings.filterBy === "prefects") {
-    filteredList = allStudents.filter(iPrefects);
+    filteredList = filteredStudents.filter(iPrefects);
   } else if (settings.filterBy === "squad") {
-    filteredList = allStudents.filter(isSquad);
+    filteredList = filteredStudents.filter(isSquad);
+  } else if (settings.filterBy === "expelled") {
+    filteredList = allStudents.filter(isExpelled);
   }
-  /* else if (settings.filterBy === "expelled") {
-    filterList = allStudents.filter(isExpelled);
-  } */
 
   return filteredList;
 }
@@ -417,9 +461,9 @@ function isSquad(student) {
   return student.squad === true;
 }
 
-/* function isExpelled(student) {
-  return student.house === "Expelled";
-} */
+function isExpelled(student) {
+  return student.expelled === true;
+}
 
 function selectSort(event) {
   const selectedSort = event.target.dataset.sort;
@@ -468,7 +512,11 @@ function sortList(sortedList) {
 }
 
 function buildList() {
-  const currentList = filterList(allStudents);
+  filteredStudents = allStudents.filter((student) => student.expelled === false);
+  console.log(filteredStudents);
+  const currentList = filterList(filteredStudents);
+
+  //const currentList = filterList(filteredStudents);
   const sortedList = sortList(currentList);
 
   displayList(sortedList);
@@ -477,6 +525,8 @@ function buildList() {
 function displayList(student) {
   // clear the list
   document.querySelector("#student_list").innerHTML = "";
+
+  document.querySelector("#number_of_students").innerHTML = `Number of students: ${student.length}`; // udskriver antallet af elever
 
   // build a new list
   showStudents(student);
@@ -489,7 +539,7 @@ function searchStudent() {
   const search = document.querySelector("#site-search").value;
 
   function filterItems(arr, query) {
-    return arr.filter((el) => el.firstName.toLowerCase().includes(query.toLowerCase())); // on fullname
+    return arr.filter((el) => el.firstName.toLowerCase().includes(query.toLowerCase()) + el.lastName.toLowerCase().includes(query.toLowerCase())); // on fullname
   }
 
   const searchedStudent = filterItems(allStudents, search);

@@ -21,7 +21,6 @@
     </section>
 
     <section id="change_list">
-        <!-- Remove div????? -->
         <div id="filter">
             <label for="filter">Filter by:</label>
             <button class="filter" data-action="filter" data-filter="all">All students</button>
@@ -44,6 +43,7 @@
             <input type="text" id="site-search" placeholder="Find a student">
             <button>Search</button>
         </div>
+        <p id="number_of_students"></p>
     </section>
 
     <section id="student_list">
@@ -76,7 +76,7 @@
             <p class="house"></p>
             <button class="read_more">Read more</button>
             <div class="action_buttons">
-                <button class="expell">E</button>
+                <button data-field="expelled" data-prefects="false" class="expelled">E</button>
                 <button data-field="prefects" data-prefects="false" class="prefects"></button>
                 <button data-field="squad" class="squad">☆</button>
             </div>
@@ -99,6 +99,9 @@
                 <p class="house"></p>
                 <p class="gender"></p>
                 <p class="blood"></p>
+                <p class="prefects_or_not"></p>
+                <p class="squad_or_not"></p>
+                <p class="expelled_or_not"></p>
             </div>
             </div>
         </article>
