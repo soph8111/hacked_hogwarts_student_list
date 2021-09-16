@@ -3,6 +3,7 @@
 // Opretter array til hvor alle studerende skal ned i, efter de er blevet rettet til
 const allStudents = [];
 let filteredStudents = allStudents;
+let theSystemIsHacked = false;
 
 // Laver en skabelon til hvad hver studerende skal indholde
 const Student = {
@@ -237,14 +238,15 @@ function showStudents(students) {
 
     function clickExpelled() {
       console.log("clickExpelled");
-      if (student.expelled === true) {
+      if (student.firstName === "Sophie") {
+        student.expelled === false;
+        canNotExpell();
+      } else if (student.expelled === true) {
         student.expelled = false;
         console.log("den studerende bliver IKKE expelled");
-        //notExpelled();
       } else if (student.expelled === false) {
         student.expelled = true;
         console.log("den studerende bliver expelled");
-        //expellStudent();
       }
       buildList();
     }
@@ -256,23 +258,13 @@ function showStudents(students) {
       klon.querySelector(".squad").textContent = "☆";
     }
 
-    /*     if (student.house === "Slytherin" || student.blood === "Pure-blood") {
-      klon.querySelector("[data-field=squad]").addEventListener("click", clickSquad);
-
-      function clickSquad() {
-        if (student.squad) {
-          student.squad = false;
-        } else {
-          student.squad = true;
-        }
-        buildList();
-      }
-    } */
-
     klon.querySelector("[data-field=squad]").addEventListener("click", clickSquad);
 
     function clickSquad() {
-      if (student.house === "Slytherin" || student.blood === "Pure-blood") {
+      if (theSystemIsHacked) {
+        student.squad = true;
+        limitedSquad(student);
+      } else if (student.house === "Slytherin" || student.blood === "Pure-blood") {
         if (student.squad) {
           student.squad = false;
         } else {
@@ -312,11 +304,6 @@ function showStudents(students) {
     studentSection.appendChild(klon); // Kloner ned i sektionen
   });
 }
-/* function notExpelled() {}
-
-function expellStudent() {
-  allStudents = allStudents.filter((student) => student.expelled === false);
-} */
 
 function tryToMakeAPrefects(selectedStudent) {
   const prefects = filteredStudents.filter((student) => student.prefects);
@@ -596,5 +583,71 @@ function hackedButton() {
 }
 
 function hackTheSystem() {
+  theSystemIsHacked = true;
   console.log("hackTheSystem");
+  document.querySelector("#ball").removeEventListener("click", hackTheSystem);
+
+  injectedMe();
+  randomBlood();
+  //limitedSquad();
+
+  buildList();
+}
+
+function injectedMe() {
+  console.log("injectedMe");
+
+  const injectedMe = {
+    firstName: "Sophie",
+    middelName: "Feline",
+    lastName: "Spang",
+    nickName: "Soph",
+    house: "Gryffindor",
+    image: "./images/myself.jpg",
+    gender: "Girl",
+    blood: "Pure-blood",
+    squad: false,
+    prefects: false,
+    expelled: false,
+  };
+
+  filteredStudents = allStudents.push(injectedMe);
+  return filteredStudents;
+}
+
+function canNotExpell() {
+  document.querySelector("#noExpell").classList.remove("hide");
+  document.querySelector("#noExpell .closebutton").addEventListener("click", closeDialog);
+
+  function closeDialog() {
+    document.querySelector("#noExpell").classList.add("hide");
+    document.querySelector("#noExpell .closebutton").removeEventListener("click", closeDialog);
+  }
+}
+
+function randomBlood() {
+  allStudents.forEach((student) => {
+    student.blood = getRandomInt(2); // giver et nummer mellem 0-2.
+
+    if (student.blood == 0) {
+      // Hvis tallet er 0, så får den studerende "half-blood" angivet som blood status.
+      student.blood = "Half-blood";
+    } else {
+      student.blood = "Pure-blood";
+    }
+  });
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function limitedSquad(student) {
+  console.log("limitedSquad");
+  if (student.squad === true) {
+    setTimeout(() => {
+      student.squad = false;
+      buildList();
+    }, 3000);
+  }
 }
