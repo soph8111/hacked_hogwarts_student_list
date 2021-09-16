@@ -72,17 +72,22 @@ function addClasse(letter) {
 function getJSON() {
   console.log("getJSON");
 
-  // Henter json med fetch
+  /*   // Henter json med fetch
   fetch("https://petlatkea.dk/2021/hogwarts/students.json")
     .then((response) => response.json())
     .then((jsonData) => {
       // when loaded, prepare objects
       prepareObjects(jsonData);
-    });
+    }); */
+
+  Promise.all([fetch("https://petlatkea.dk/2021/hogwarts/students.json").then((resp) => resp.json()), fetch("https://petlatkea.dk/2021/hogwarts/families.json").then((resp) => resp.json())]).then((jsonData) => {
+    // when loaded, prepare objects
+    prepareObjects(jsonData[0], jsonData[1]);
+  });
 }
 
-function prepareObjects(jsonData) {
-  jsonData.forEach((elm) => {
+function prepareObjects(studentArray, bloodArray) {
+  studentArray.forEach((elm) => {
     // Create new object with cleaned data - and store that in the allStudents array (kalder funktioner, så hvert navn kan bearbejdes der)
     const student = Object.create(Student);
     student.firstName = getFirstName(elm.fullname);
@@ -92,10 +97,11 @@ function prepareObjects(jsonData) {
     student.house = elm.house;
     student.image = getImage(elm.fullname);
     student.gender = elm.gender;
-    // student.blood = getBloodStatus(elm);
+    student.blood = getBloodStatus(student, bloodArray);
     allStudents.push(student);
   });
 
+  console.log(bloodArray);
   // Retter efterfølgende bogstaverne til.
   changeLetters();
   buildList();
@@ -187,8 +193,16 @@ function getImage(fullname) {
   return image;
 }
 
-function getBloodStatus(student) {
-  console.log("getBloodStatus");
+function getBloodStatus(student, blood) {
+  //console.log("getBloodStatus");
+  student.lastName = student.lastName.substring(0, 1).toUpperCase() + student.lastName.substring(1).toLowerCase();
+
+  if (blood.half.includes(student.lastName)) {
+    student.blood = "Half-blood";
+  } else {
+    student.blood = "Pure-blood";
+  }
+  return student.blood;
 }
 
 function changeLetters() {
@@ -358,22 +372,22 @@ function readMore(student) {
   }
   klon.querySelector(".about_student .house").textContent = `House: ${student.house}`;
   klon.querySelector(".about_student .gender").textContent = `Gender: ${student.gender}`;
-  klon.querySelector(".about_student .blood").textContent = `${student.blood}`;
+  klon.querySelector(".about_student .blood").textContent = `Blood status: ${student.blood}`;
 
   klon.querySelector(".about_student .close").addEventListener("click", () => {
     document.querySelector("#popup").classList.remove("active");
   });
 
   if (student.prefects) {
-    klon.querySelector(".prefects_or_not").textContent = `${student.firstName} is prefects`;
+    klon.querySelector(".prefects_or_not").textContent = `Prefects: Yes`;
   } else {
-    klon.querySelector(".prefects_or_not").textContent = `${student.firstName} is not prefects`;
+    klon.querySelector(".prefects_or_not").textContent = `Prefects: No`;
   }
 
   if (student.squad) {
-    klon.querySelector(".squad_or_not").textContent = `${student.firstName} is a member of inquisitorial squad`;
+    klon.querySelector(".squad_or_not").textContent = `Member of inquisitorial squad: Yes`;
   } else {
-    klon.querySelector(".squad_or_not").textContent = `${student.firstName} is not member of inquisitorial squad`;
+    klon.querySelector(".squad_or_not").textContent = `Member of inquisitorial squad: No`;
   }
 
   popupSection.appendChild(klon); // Kloner ned i sektionen
