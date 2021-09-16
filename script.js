@@ -256,15 +256,43 @@ function showStudents(students) {
       klon.querySelector(".squad").textContent = "☆";
     }
 
+    /*     if (student.house === "Slytherin" || student.blood === "Pure-blood") {
+      klon.querySelector("[data-field=squad]").addEventListener("click", clickSquad);
+
+      function clickSquad() {
+        if (student.squad) {
+          student.squad = false;
+        } else {
+          student.squad = true;
+        }
+        buildList();
+      }
+    } */
+
     klon.querySelector("[data-field=squad]").addEventListener("click", clickSquad);
 
     function clickSquad() {
-      if (student.squad) {
-        student.squad = false;
+      if (student.house === "Slytherin" || student.blood === "Pure-blood") {
+        if (student.squad) {
+          student.squad = false;
+        } else {
+          student.squad = true;
+        }
       } else {
-        student.squad = true;
+        canNotBeSquad(student);
       }
       buildList();
+    }
+
+    function canNotBeSquad(student) {
+      console.log("test");
+      document.querySelector("#noSquad").classList.remove("hide");
+      document.querySelector("#noSquad .closebutton").addEventListener("click", closeDialog);
+    }
+
+    function closeDialog() {
+      document.querySelector("#noSquad").classList.add("hide");
+      document.querySelector("#noSquad .closebutton").removeEventListener("click", closeDialog);
     }
 
     // Prefects
