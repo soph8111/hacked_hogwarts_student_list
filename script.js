@@ -146,6 +146,9 @@ function getMiddelName(fullname) {
     middelName = "";
   }
 
+  if (middelName === `"Ernie"`) {
+    middelName = "";
+  }
   return middelName;
   //  console.log(middelName);
 }
@@ -253,9 +256,9 @@ function showStudents(students) {
 
     // Squad
     if (student.squad === true) {
-      klon.querySelector(".squad").textContent = "⭐";
+      klon.querySelector(".squad img").classList.remove("false");
     } else if (student.squad === false) {
-      klon.querySelector(".squad").textContent = "☆";
+      klon.querySelector(".squad img").classList.add("false");
     }
 
     klon.querySelector("[data-field=squad]").addEventListener("click", clickSquad);
@@ -279,12 +282,12 @@ function showStudents(students) {
     function canNotBeSquad(student) {
       console.log("test");
       document.querySelector("#noSquad").classList.remove("hide");
-      document.querySelector("#noSquad .closebutton").addEventListener("click", closeDialog);
+      document.querySelector("#noSquad .close").addEventListener("click", closeDialog);
     }
 
     function closeDialog() {
       document.querySelector("#noSquad").classList.add("hide");
-      document.querySelector("#noSquad .closebutton").removeEventListener("click", closeDialog);
+      document.querySelector("#noSquad .close").removeEventListener("click", closeDialog);
     }
 
     // Prefects
@@ -317,7 +320,7 @@ function tryToMakeAPrefects(selectedStudent) {
 
   // if there is another of the same type
   if (numberOfPrefects >= 2) {
-    console.log("there can only be two winners");
+    console.log("there can only be two prefects");
     removeAorB(other[0], other[1]);
   } else {
     makePrefects(selectedStudent);
@@ -326,7 +329,7 @@ function tryToMakeAPrefects(selectedStudent) {
   function removeAorB(prefectsA, prefectsB) {
     // ask the user to ignore or remove A or B
     document.querySelector("#remove_aorb").classList.remove("hide");
-    document.querySelector("#remove_aorb .closebutton").addEventListener("click", closeDialog);
+    document.querySelector("#remove_aorb .close").addEventListener("click", closeDialog);
     document.querySelector("#remove_aorb #removea").addEventListener("click", removeA);
     document.querySelector("#remove_aorb #removeb").addEventListener("click", removeB);
 
@@ -337,7 +340,7 @@ function tryToMakeAPrefects(selectedStudent) {
     // if the user ignore, do nothing
     function closeDialog() {
       document.querySelector("#remove_aorb").classList.add("hide");
-      document.querySelector("#remove_aorb .closebutton").removeEventListener("click", closeDialog);
+      document.querySelector("#remove_aorb .close").removeEventListener("click", closeDialog);
       document.querySelector("#remove_aorb #removea").removeEventListener("click", removeA);
       document.querySelector("#remove_aorb #removeb").removeEventListener("click", removeB);
     }
@@ -418,7 +421,7 @@ function readMore(student) {
     document.querySelector("#popup").style.background = "#85302B";
     document.querySelector(".crest").src = "./images/gryffindor.png";
   } else {
-    document.querySelector("#popup").style.background = "#FADF5B";
+    document.querySelector("#popup").style.background = "#ab9739";
     document.querySelector(".crest").src = "./images/hufflepuff.png";
   }
 }
@@ -426,12 +429,48 @@ function readMore(student) {
 // FILTERBUTTONS
 
 function registerFilterButtons() {
-  filterButtons.forEach((button) => {
-    button.addEventListener("click", selectFilter);
-  });
-  document.querySelectorAll(`[data-action="sort"]`).forEach((sortButton) => {
-    sortButton.addEventListener("click", selectSort);
-  });
+  document.querySelector("#filter").addEventListener("click", openFilterDropDown);
+  document.querySelector("#sort").addEventListener("click", openSortDropDown);
+
+  function openFilterDropDown() {
+    const filterDropdown = document.querySelector("#filter .dropdown");
+    if (filterDropdown.style.display === "grid") {
+      filterDropdown.style.display = "none";
+      document.querySelector("#filter .arrow").textContent = "Filter by ▼";
+    } else {
+      filterDropdown.style.display = "grid";
+      document.querySelector("#filter .arrow").textContent = "Filter by ▲";
+    }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", selectFilter);
+    });
+  }
+
+  function openSortDropDown() {
+    const sortDropdown = document.querySelector("#sort .dropdown");
+    if (sortDropdown.style.display === "grid") {
+      sortDropdown.style.display = "none";
+      document.querySelector("#sort .arrow").textContent = "Sort by ▼";
+    } else {
+      sortDropdown.style.display = "grid";
+      document.querySelector("#sort .arrow").textContent = "Sort by ▲";
+    }
+
+    document.querySelectorAll(`[data-action="sort"]`).forEach((sortButton) => {
+      sortButton.addEventListener("click", selectSort);
+    });
+  }
+
+  /*   function openDropDown() {
+    document.querySelector(".dropdown").style.display = "grid";
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", selectFilter);
+    });
+    document.querySelectorAll(`[data-action="sort"]`).forEach((sortButton) => {
+      sortButton.addEventListener("click", selectSort);
+    });
+  } */
 }
 
 function selectFilter(event) {
@@ -587,11 +626,31 @@ function hackTheSystem() {
   console.log("hackTheSystem");
   document.querySelector("#ball").removeEventListener("click", hackTheSystem);
 
+  ballFlyAway();
+
   injectedMe();
   randomBlood();
-  //limitedSquad();
 
   buildList();
+}
+
+function ballFlyAway() {
+  document.querySelector("#ball").classList.add("flyaway");
+  document.querySelector("#ball").addEventListener("animationend", () => {
+    document.querySelector("#ball").classList.add("hidden");
+    angryBall();
+  });
+}
+
+function angryBall() {
+  document.querySelector("#angryball").classList.remove("hidden");
+  document.querySelector("#angryball").classList.add(".angryball");
+  setTimeout(() => {
+    document.querySelector("#evil").play();
+  }, 1650);
+  document.querySelector("#angryball").addEventListener("animationend", () => {
+    document.querySelector("#ball").classList.add("hidden");
+  });
 }
 
 function injectedMe() {
@@ -617,11 +676,11 @@ function injectedMe() {
 
 function canNotExpell() {
   document.querySelector("#noExpell").classList.remove("hide");
-  document.querySelector("#noExpell .closebutton").addEventListener("click", closeDialog);
+  document.querySelector("#noExpell .close").addEventListener("click", closeDialog);
 
   function closeDialog() {
     document.querySelector("#noExpell").classList.add("hide");
-    document.querySelector("#noExpell .closebutton").removeEventListener("click", closeDialog);
+    document.querySelector("#noExpell .close").removeEventListener("click", closeDialog);
   }
 }
 
