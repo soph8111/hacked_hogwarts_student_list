@@ -203,8 +203,10 @@ function getBloodStatus(student, blood) {
 
   if (blood.half.includes(student.lastName)) {
     student.blood = "Half-blood";
-  } else {
+  } else if (blood.pure.includes(student.lastName)) {
     student.blood = "Pure-blood";
+  } else {
+    student.blood = "Muggle-blood";
   }
   return student.blood;
 }
@@ -627,11 +629,6 @@ function hackTheSystem() {
   document.querySelector("#ball").removeEventListener("click", hackTheSystem);
 
   ballFlyAway();
-
-  injectedMe();
-  randomBlood();
-
-  buildList();
 }
 
 function ballFlyAway() {
@@ -651,6 +648,11 @@ function angryBall() {
   document.querySelector("#angryball").addEventListener("animationend", () => {
     document.querySelector("#ball").classList.add("hidden");
   });
+
+  injectedMe();
+  randomBlood();
+
+  buildList();
 }
 
 function injectedMe() {
@@ -686,12 +688,16 @@ function canNotExpell() {
 
 function randomBlood() {
   allStudents.forEach((student) => {
-    student.blood = getRandomInt(2); // giver et nummer mellem 0-2.
+    if (student.blood === "Pure-blood") {
+      student.blood = getRandomInt(2); // giver et nummer mellem 0-2.
 
-    if (student.blood == 0) {
-      // Hvis tallet er 0, så får den studerende "half-blood" angivet som blood status.
-      student.blood = "Half-blood";
-    } else {
+      if (student.blood == 0) {
+        // Hvis tallet er 0, så får den studerende "half-blood" angivet som blood status.
+        student.blood = "Half-blood";
+      } else {
+        student.blood = "Pure-blood";
+      }
+    } else if (student.blood === "Muggle-blood" || student === "Half-blood") {
       student.blood = "Pure-blood";
     }
   });
