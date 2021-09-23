@@ -240,6 +240,11 @@ function showStudents(students) {
 
     // Expelled
     klon.querySelector("[data-field=expelled]").addEventListener("click", clickExpelled);
+    if (student.expelled) {
+      klon.querySelector("[data-field=expelled]").classList.add("expelled_true");
+      klon.querySelector(".studentcard").style.background = "#313131";
+      klon.querySelector(".student_photo").style.filter = "grayscale(1)";
+    }
 
     function clickExpelled() {
       console.log("clickExpelled");
@@ -293,7 +298,12 @@ function showStudents(students) {
     }
 
     // Prefects
-    klon.querySelector("[data-field=prefects]").dataset.prefects = student.prefects;
+
+    if (student.prefects === true) {
+      klon.querySelector(".prefects img").classList.remove("false");
+    } else if (student.prefects === false) {
+      klon.querySelector(".prefects img").classList.add("false");
+    }
 
     klon.querySelector("[data-field=prefects]").addEventListener("click", clickPrefects);
 

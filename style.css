@@ -94,6 +94,7 @@ button {
   animation-iteration-count: 1;
   position: absolute;
   left: 120vw;
+  z-index: 99;
 }
 
 .hidden {
@@ -238,7 +239,7 @@ button {
 }
 
 /* PREFECTS AND SQUAD*/
-
+/* 
 button[data-field="prefects"]::after {
   content: url(./images/prefects.png);
   width: 18px;
@@ -246,10 +247,14 @@ button[data-field="prefects"]::after {
 
 button[data-field="prefects"][data-prefects="false"]::after {
   filter: grayscale(1);
-}
+} */
 
 .false {
   filter: grayscale(1);
+}
+
+.false:hover {
+  filter: grayscale(0);
 }
 
 .expelled {
@@ -258,6 +263,10 @@ button[data-field="prefects"][data-prefects="false"]::after {
 }
 
 .expelled:hover {
+  filter: grayscale(0.6);
+}
+
+.expelled_true {
   filter: grayscale(0.6);
 }
 
