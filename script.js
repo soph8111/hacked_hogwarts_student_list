@@ -297,8 +297,7 @@ function showStudents(students) {
       document.querySelector("#noSquad .close").removeEventListener("click", closeDialog);
     }
 
-    // Prefects
-
+    // Prefectss
     if (student.prefects === true) {
       klon.querySelector(".prefects img").classList.remove("false");
     } else if (student.prefects === false) {
@@ -324,21 +323,54 @@ function tryToMakeAPrefects(selectedStudent) {
   const prefects = filteredStudents.filter((student) => student.prefects);
 
   const other = prefects.filter((student) => student.house === selectedStudent.house);
-  const numberOfPrefects = other.length;
+  const gender = other.filter((student) => student.gender === selectedStudent.gender);
+  const numberOfPrefects = gender.length;
 
   console.log(prefects);
   console.log(numberOfPrefects);
   console.log(other);
+  console.log(gender);
+  console.log(selectedStudent.gender);
 
   // if there is another of the same type
-  if (numberOfPrefects >= 2) {
+  if (numberOfPrefects >= 1) {
+    console.log("there can only be one from each gender as a prefects");
+    removeOther(gender[0]);
+  } /* else if (numberOfPrefects >= 2) {
     console.log("there can only be two prefects");
     removeAorB(other[0], other[1]);
-  } else {
+  }  */ else {
     makePrefects(selectedStudent);
   }
 
-  function removeAorB(prefectsA, prefectsB) {
+  function removeOther(prefectsOther) {
+    // ask the user to ignore or remove the other
+    document.querySelector("#remove_other").classList.remove("hide");
+    document.querySelector("#remove_other p").innerHTML = `There can only be one of each gender as a prefects from each house! <br> <br>
+    Do you wish to remove ${prefectsOther.firstName}?`;
+    document.querySelector("#remove_other .close").addEventListener("click", closeDialog);
+    document.querySelector("#remove_other #removeOther").addEventListener("click", removeOther);
+
+    // show name on button
+    document.querySelector("#remove_other [data-field=prefectsOther]").textContent = prefectsOther.firstName;
+
+    // if the user ignore, do nothing
+    function closeDialog() {
+      document.querySelector("#remove_other").classList.add("hide");
+      document.querySelector("#remove_other .close").removeEventListener("click", closeDialog);
+      document.querySelector("#remove_other #removeOther").removeEventListener("click", removeOther);
+    }
+
+    // if remove A
+    function removeOther() {
+      removePrefects(prefectsOther);
+      makePrefects(selectedStudent);
+      buildList();
+      closeDialog();
+    }
+  }
+
+  /*   function removeAorB(prefectsA, prefectsB) {
     // ask the user to ignore or remove A or B
     document.querySelector("#remove_aorb").classList.remove("hide");
     document.querySelector("#remove_aorb .close").addEventListener("click", closeDialog);
@@ -372,7 +404,7 @@ function tryToMakeAPrefects(selectedStudent) {
       buildList();
       closeDialog();
     }
-  }
+  } */
 
   function removePrefects(winnerPrefects) {
     winnerPrefects.prefects = false;
@@ -722,6 +754,7 @@ function limitedSquad(student) {
   if (student.squad === true) {
     setTimeout(() => {
       student.squad = false;
+      document.querySelector("#evil").play();
       buildList();
     }, 3000);
   }

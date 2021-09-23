@@ -328,6 +328,10 @@ button[data-field="prefects"][data-prefects="false"]::after {
   top: 10px;
 }
 
+.close:hover {
+  color: #161934;
+}
+
 /* Warning */
 
 .hide {
@@ -361,6 +365,7 @@ button[data-field="prefects"][data-prefects="false"]::after {
   text-align: center;
 }
 
+.dialog #removeOther,
 .dialog #removea,
 .dialog #removeb {
   border: 1px solid #e8ebed;
@@ -369,6 +374,10 @@ button[data-field="prefects"][data-prefects="false"]::after {
   padding: 10px;
   font-weight: 300;
   border-radius: 3.4px;
+}
+
+.dialog #removeOther:hover {
+  background: #303652;
 }
 
 .dialog p {
