@@ -243,6 +243,7 @@ function showStudents(students) {
 
     // Expelled
     klon.querySelector("[data-field=expelled]").addEventListener("click", clickExpelled);
+
     if (student.expelled) {
       klon.querySelector("[data-field=expelled]").classList.add("expelled_true");
       klon.querySelector(".studentcard").style.background = "#313131";
@@ -254,9 +255,9 @@ function showStudents(students) {
       if (student.firstName === "Sophie") {
         student.expelled === false;
         canNotExpell();
-      } else if (student.expelled === true) {
+        /*   } else if (student.expelled === true) {
         student.expelled = false;
-        console.log("den studerende bliver IKKE expelled");
+        console.log("den studerende bliver IKKE expelled"); */
       } else if (student.expelled === false) {
         student.expelled = true;
         console.log("den studerende bliver expelled");
@@ -470,6 +471,10 @@ function readMore(student) {
   } else {
     document.querySelector("#popup").style.background = "#ab9739";
     document.querySelector(".crest").src = "./images/hufflepuff.png";
+  }
+
+  if (student.expelled) {
+    document.querySelector("#popup").style.background = "#313131";
   }
 }
 
@@ -692,7 +697,47 @@ function angryBall() {
   }, 1650);
   document.querySelector("#angryball").addEventListener("animationend", () => {
     document.querySelector("#ball").classList.add("hidden");
+    changeTheme();
   });
+}
+
+function changeTheme() {
+  document.querySelector("body").style.background = "#000000 url(images/stars.png) repeat";
+  document.querySelector("body .twinkling").style.background = "transparent url(images/twinkling_black.png) repeat top center";
+  document.querySelector("h1").style.fontFamily = "Butcherman";
+  document.querySelector("h1").style.fontSize = "2.7rem";
+
+  // Typewriter
+  let typewriter = document.querySelector(".heading").textContent; // Henter teksts
+
+  // Opretter variabler
+  let maxNumbersOfIterations; // Variabel der skal tælles på
+  let iterator;
+  let output;
+
+  init();
+
+  function init() {
+    typewriter = "The Hacked Hogwart Student List"; // ændre teksten
+    maxNumbersOfIterations = typewriter.length; // Loopet skal køre det antal gange, som teksten indholder karakterer.
+    console.log(maxNumbersOfIterations); // 44 gange
+    iterator = 0; // Den skal starte med første bogstav, hvilket har nummer 1.
+    loop(); // Kalder på  loopet
+  }
+
+  function loop() {
+    iterator++; // Plusser én til hver gang loopet har kørt
+
+    // Så længe iterator er mindre end eller lig med antallet af bogstaver/karaktere
+    if (iterator <= maxNumbersOfIterations) {
+      setTimeout(loop, 200); // Sætter delay på loopet (0,25 sekunder
+    }
+    output = typewriter.substring(iterator, 0);
+    // ^^ Med substing laver vi en ny string, og med paranteserne vælger vi hvilket tegn fra den nuværende teskt der skal udskrives.
+    // ^^ Laver substring og udskriver til og med det tegn vi er kommet til. Vi siger den skal "stoppe" ved 0, da vi gerne vil have udskrevet alt det inden det aktuelle tegn også.
+    console.log(output); // Udskriver den aktuelle tekst i konsollen
+    document.querySelector("#h1").textContent = output; // Sætter h1 = output
+  }
 
   injectedMe();
   randomBlood();
@@ -722,6 +767,7 @@ function injectedMe() {
 }
 
 function canNotExpell() {
+  document.querySelector("#evil").play();
   document.querySelector("#noExpell").classList.remove("hide");
   document.querySelector("#noExpell .close").addEventListener("click", closeDialog);
 

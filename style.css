@@ -109,14 +109,14 @@ button {
     transform: translate(-50vw, 20vw) scale(5);
   }
   100% {
-    transform: translate(-150vw, 10vw) scale(1);
+    transform: translate(-125vw, 10vw) scale(1);
   }
 }
 
 /* FONTE */
 h1 {
   font-family: "Henny Penny", cursive;
-  font-size: 2rem;
+  font-size: 2.7rem;
   padding: 20px;
   color: #e8ebed;
 }
@@ -269,6 +269,24 @@ button[data-field="prefects"][data-prefects="false"]::after {
 .expelled_true {
   filter: grayscale(0.6);
 }
+
+/* .expellAnimation {
+  animation-name: expell_kf;
+  animation-duration: 1s;
+  animation-timing-function: ease-in;
+}
+
+@keyframes expell_kf {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+} */
 
 /* Pop Up  */
 #popup {
