@@ -547,7 +547,7 @@ function filterList(filteredList) {
   } else if (settings.filterBy === "ravenclaw") {
     filteredList = filteredStudents.filter(isRavenclaw);
   } else if (settings.filterBy === "prefects") {
-    filteredList = filteredStudents.filter(iPrefects);
+    filteredList = filteredStudents.filter(isPrefects);
   } else if (settings.filterBy === "squad") {
     filteredList = filteredStudents.filter(isSquad);
   } else if (settings.filterBy === "expelled") {
@@ -573,7 +573,7 @@ function isRavenclaw(student) {
   return student.house === "Ravenclaw";
 }
 
-function iPrefects(student) {
+function isPrefects(student) {
   return student.prefects === true;
 }
 
@@ -635,8 +635,6 @@ function buildList() {
   filteredStudents = allStudents.filter((student) => student.expelled === false);
   console.log(filteredStudents);
   const currentList = filterList(filteredStudents);
-
-  //const currentList = filterList(filteredStudents);
   const sortedList = sortList(currentList);
 
   displayList(sortedList);
@@ -705,7 +703,6 @@ function changeTheme() {
   document.querySelector("body").style.background = "#000000 url(images/stars.png) repeat";
   document.querySelector("body .twinkling").style.background = "transparent url(images/twinkling_black.png) repeat top center";
   document.querySelector("h1").style.fontFamily = "Butcherman";
-  document.querySelector("h1").style.fontSize = "2.7rem";
 
   // Typewriter
   let typewriter = document.querySelector(".heading").textContent; // Henter teksts
@@ -735,7 +732,6 @@ function changeTheme() {
     output = typewriter.substring(iterator, 0);
     // ^^ Med substing laver vi en ny string, og med paranteserne vælger vi hvilket tegn fra den nuværende teskt der skal udskrives.
     // ^^ Laver substring og udskriver til og med det tegn vi er kommet til. Vi siger den skal "stoppe" ved 0, da vi gerne vil have udskrevet alt det inden det aktuelle tegn også.
-    console.log(output); // Udskriver den aktuelle tekst i konsollen
     document.querySelector("#h1").textContent = output; // Sætter h1 = output
   }
 
@@ -780,13 +776,17 @@ function canNotExpell() {
 function randomBlood() {
   allStudents.forEach((student) => {
     if (student.blood === "Pure-blood") {
-      student.blood = getRandomInt(2); // giver et nummer mellem 0-2.
+      student.blood = getRandomInt(3); // giver et tal mellem 0-3.
 
       if (student.blood == 0) {
         // Hvis tallet er 0, så får den studerende "half-blood" angivet som blood status.
         student.blood = "Half-blood";
-      } else {
+        // Hvis tallet er 1, så får den studerende "palf-blood" angivet som blood status.
+      } else if (student.blood == 1) {
         student.blood = "Pure-blood";
+        // Hvis tallet er 2, så får den studerende "half-blood" angivet som blood status.
+      } else {
+        student.blood = "Muggle-blood";
       }
     } else if (student.blood === "Muggle-blood" || student === "Half-blood") {
       student.blood = "Pure-blood";
